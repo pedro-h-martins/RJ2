@@ -42,15 +42,15 @@ function Endereco(uf, nomeEstado, rua, numeroCasa) {
                'Estado: ' + this.getUf();
     }
 
-    // Verificação de Caixa Alta ou Baixa
-    this.getUfCaixaAlta = function() { return this.uf.toCaixaAlta(); }
-    this.getUfCaixaBaixa = function() { return this.uf.toCaixaBaixa(); }
+    // Verificação independente de estar em caixa alta ou baixa
+    this.getUfCaixaAlta = function() { return this.uf.toUpperCase(); }
+    this.getUfCaixaBaixa = function() { return this.uf.toLowerCase(); }
     
-    this.getNomeEstadoCaixaAlta = function() { return this.nomeEstado.toCaixaAlta(); }
-    this.getNomeEstadoCaixaBaixa = function() { return this.nomeEstado.toCaixaBaixa(); }
+    this.getNomeEstadoCaixaAlta = function() { return this.nomeEstado.toUpperCase(); }
+    this.getNomeEstadoCaixaBaixa = function() { return this.nomeEstado.toLowerCase(); }
     
-    this.getRuaCaixaAlta = function() { return this.rua.toCaixaAlta(); }
-    this.getRuaCaixaBaixa = function() { return this.rua.toCaixaBaixa(); }
+    this.getRuaCaixaAlta = function() { return this.rua.toUpperCase(); }
+    this.getRuaCaixaBaixa = function() { return this.rua.toLowerCase(); }
 } 
 
 function Cliente(nome, telefoneCelular, email, endereco) { 
@@ -83,11 +83,11 @@ function Cliente(nome, telefoneCelular, email, endereco) {
                '-'.repeat(15);
     }
 
-    this.getNomeCaixaAlta = function() { return this.nome.toCaixaAlta(); }
-    this.getNomeCaixaBaixa = function() { return this.nome.toCaixaBaixa(); }
+    this.getNomeCaixaAlta = function() { return this.nome.toUpperCase(); }
+    this.getNomeCaixaBaixa = function() { return this.nome.toLowerCase(); }
     
-    this.getEmailCaixaAlta = function() { return this.email.toCaixaAlta(); }
-    this.getEmailCaixaBaixa = function() { return this.email.toCaixaBaixa(); }
+    this.getEmailCaixaAlta = function() { return this.email.toUpperCase(); }
+    this.getEmailCaixaBaixa = function() { return this.email.toLowerCase(); }
 } 
 
 let telefone = new TelefoneCelular('11', '999999999') 
@@ -95,4 +95,28 @@ let endereco = new Endereco('SP', 'São Paulo', 'Av. Paulista', '987')
 let cliente = new Cliente('Carlos Conrado Heinz', telefone, 'carlos.conrado@app.coml', endereco)
 
 console.log(cliente.descricao());
+
+// Para ordenar, ela primeiro cria uma copia dos valores '[...clientes]', depois ela deixa os dois nomes em caixa baixa para não haver erros ao comparar, e por fim, compara os valores usando regras de ordenação da língua.
+function ordenarClientesPorNome(clientes) {
+    return [...clientes].sort((a, b) => {
+        const nomeA = a.getNome().toLowerCase();
+        const nomeB = b.getNome().toLowerCase();
+        return nomeA.localeCompare(nomeB);
+    });
+}
+
+// Criação de mais clientes para testar se esta ordenando corretamente
+let telefone2 = new TelefoneCelular('21', '888888888');
+let endereco2 = new Endereco('RJ', 'Rio de Janeiro', 'Av. Botânica', '554');
+let cliente2 = new Cliente('Ana Silva', telefone2, 'ana.silva@app.com', endereco2);
+
+let telefone3 = new TelefoneCelular('31', '777777777');
+let endereco3 = new Endereco('MG', 'Belo Horizonte', 'Rua da Bahia', '997');
+let cliente3 = new Cliente('Bruno Santos', telefone3, 'bruno.santos@app.com', endereco3);
+
+let clientes = [cliente, cliente2, cliente3];
+
+let clientesOrdenados = ordenarClientesPorNome(clientes);
+
+console.log(clientesOrdenados);
 
